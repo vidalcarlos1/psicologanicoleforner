@@ -1969,3 +1969,37 @@ blockquote {
     }
 
 }
+
+/* ===== Slide da foto6: degradê em CSS (só computador) ===== */
+@media (min-width: 901px) and (min-aspect-ratio: 1/1) {
+
+    .hero-slide--degrade::before,
+    .hero-slide--degrade::after {
+        content: "";
+        position: absolute;
+        background-repeat: no-repeat;
+    }
+
+    /* degradê: cinza-escuro onde fica o texto até o branco da cortina da foto */
+    .hero-slide--degrade::before {
+        inset: 0;
+        background-image: linear-gradient(90deg,
+                #4f4d4a 0%,
+                #7d7a76 36%,
+                #b4b1ac 58%, 
+                #dcdad5 74%,
+                #efeeea 100%);
+    }
+
+    /* foto maior: só a parte de baixo (notebook) sai da tela; rosto e corpo ficam inteiros */
+    .hero-slide--degrade::after {
+        top: 0;
+        right: 2%;
+        height: 124%;
+        aspect-ratio: var(--ratio, 3 / 4);
+        background-image: inherit;
+        background-size: 100% 100%;
+        -webkit-mask-image: linear-gradient(to right, transparent, #000 32%, #000 88%, transparent);
+        mask-image: linear-gradient(to right, transparent, #000 32%, #000 88%, transparent);
+    }
+}
