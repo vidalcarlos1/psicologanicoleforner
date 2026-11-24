@@ -1,67 +1,72 @@
-/* =====================================================
-   CONFIGURAÇÕES
-===================================================== */
 
+// =====================================================
+// CONFIGURAÇÕES
+// =====================================================
 
 // Formato: código do país + DDD + número
-// Exemplo: 5519999999999
-
 const whatsappNumber = "5519993800424";
 
 
-/* =====================================================
-   WHATSAPP
-===================================================== */
+// =====================================================
+// WHATSAPP
+// =====================================================
 
 const whatsappMessage =
     "Olá, Nicole! Vim pelo seu site e gostaria de saber mais sobre os atendimentos psicológicos.";
-
 
 const whatsappURL =
     `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
 
 
-document
-    .getElementById("whatsappButton")
-    .href = whatsappURL;
+const whatsappButton =
+    document.getElementById("whatsappButton");
+
+const floatingWhatsapp =
+    document.getElementById("floatingWhatsapp");
+
+const footerWhatsapp =
+    document.getElementById("footerWhatsapp");
 
 
-document
-    .getElementById("floatingWhatsapp")
-    .href = whatsappURL;
+if (whatsappButton) {
+    whatsappButton.href = whatsappURL;
+}
+
+if (floatingWhatsapp) {
+    floatingWhatsapp.href = whatsappURL;
+}
+
+if (footerWhatsapp) {
+    footerWhatsapp.href = whatsappURL;
+}
 
 
-document
-    .getElementById("footerWhatsapp")
-    .href = whatsappURL;
-
-
-/* =====================================================
-   HEADER AO ROLAR
-===================================================== */
+// =====================================================
+// HEADER AO ROLAR
+// =====================================================
 
 const header =
     document.getElementById("header");
 
 
-window.addEventListener("scroll", () => {
+if (header) {
 
-    if (window.scrollY > 60) {
+    window.addEventListener("scroll", () => {
 
-        header.classList.add("scrolled");
+        if (window.scrollY > 60) {
+            header.classList.add("scrolled");
+        } else {
+            header.classList.remove("scrolled");
+        }
 
-    } else {
+    });
 
-        header.classList.remove("scrolled");
-
-    }
-
-});
+}
 
 
-/* =====================================================
-   MENU MOBILE
-===================================================== */
+// =====================================================
+// MENU MOBILE
+// =====================================================
 
 const menuToggle =
     document.getElementById("menuToggle");
@@ -70,28 +75,32 @@ const nav =
     document.getElementById("nav");
 
 
-menuToggle.addEventListener("click", () => {
+if (menuToggle && nav) {
 
-    nav.classList.toggle("active");
+    menuToggle.addEventListener("click", () => {
 
-});
-
-
-document.querySelectorAll(".nav a")
-    .forEach(link => {
-
-        link.addEventListener("click", () => {
-
-            nav.classList.remove("active");
-
-        });
+        nav.classList.toggle("active");
 
     });
 
 
-/* =====================================================
-   HERO SLIDER
-===================================================== */
+    document.querySelectorAll(".nav a")
+        .forEach(link => {
+
+            link.addEventListener("click", () => {
+
+                nav.classList.remove("active");
+
+            });
+
+        });
+
+}
+
+
+// =====================================================
+// HERO SLIDER
+// =====================================================
 
 const slides =
     document.querySelectorAll(".hero-slide");
@@ -105,23 +114,26 @@ let currentSlide = 0;
 
 function showSlide(index) {
 
+    if (!slides.length) return;
+
+    // Garantir índice válido
+    if (index < 0 || index >= slides.length) {
+        index = 0;
+    }
+
     slides.forEach(slide => {
-
         slide.classList.remove("active");
-
     });
-
 
     dots.forEach(dot => {
-
         dot.classList.remove("active");
-
     });
-
 
     slides[index].classList.add("active");
 
-    dots[index].classList.add("active");
+    if (dots[index]) {
+        dots[index].classList.add("active");
+    }
 
     currentSlide = index;
 
@@ -130,8 +142,9 @@ function showSlide(index) {
 
 function nextSlide() {
 
-    let next =
-        currentSlide + 1;
+    if (!slides.length) return;
+
+    let next = currentSlide + 1;
 
     if (next >= slides.length) {
         next = 0;
@@ -142,33 +155,48 @@ function nextSlide() {
 }
 
 
-let sliderInterval =
-    setInterval(nextSlide, 6000);
+// Iniciar slider automático somente se houver mais de uma imagem
+let sliderInterval = null;
+
+if (slides.length > 1) {
+
+    sliderInterval =
+        setInterval(nextSlide, 6000);
+
+}
 
 
-/* =====================================================
-   DOTS DO SLIDER
-===================================================== */
+// =====================================================
+// DOTS DO SLIDER
+// =====================================================
 
 dots.forEach((dot, index) => {
 
     dot.addEventListener("click", () => {
 
+        if (index >= slides.length) return;
+
         showSlide(index);
 
-        clearInterval(sliderInterval);
+        if (sliderInterval) {
+            clearInterval(sliderInterval);
+        }
 
-        sliderInterval =
-            setInterval(nextSlide, 6000);
+        if (slides.length > 1) {
+
+            sliderInterval =
+                setInterval(nextSlide, 6000);
+
+        }
 
     });
 
 });
 
 
-/* =====================================================
-   ANIMAÇÃO SUAVE DOS LINKS
-===================================================== */
+// =====================================================
+// ANIMAÇÃO SUAVE DOS LINKS
+// =====================================================
 
 document
     .querySelectorAll('a[href^="#"]')
@@ -176,10 +204,14 @@ document
 
         anchor.addEventListener("click", function (e) {
 
+            const href =
+                this.getAttribute("href");
+
+            // Ignorar links apenas com #
+            if (!href || href === "#") return;
+
             const target =
-                document.querySelector(
-                    this.getAttribute("href")
-                );
+                document.querySelector(href);
 
             if (!target) return;
 
@@ -193,19 +225,24 @@ document
 
     });
 
-/* =====================================================
-   SLIDER - MINHA TRAJETÓRIA
-===================================================== */
 
-const trajectorySlides = document.querySelectorAll('.trajectory-slide');
+// =====================================================
+// SLIDER - MINHA TRAJETÓRIA
+// =====================================================
+
+const trajectorySlides =
+    document.querySelectorAll(".trajectory-slide");
+
 
 let trajectoryIndex = 0;
+
 
 if (trajectorySlides.length > 1) {
 
     setInterval(() => {
 
-        trajectorySlides[trajectoryIndex].classList.remove('active');
+        trajectorySlides[trajectoryIndex]
+            .classList.remove("active");
 
         trajectoryIndex++;
 
@@ -213,8 +250,152 @@ if (trajectorySlides.length > 1) {
             trajectoryIndex = 0;
         }
 
-        trajectorySlides[trajectoryIndex].classList.add('active');
+        trajectorySlides[trajectoryIndex]
+            .classList.add("active");
 
     }, 5000);
 
 }
+
+
+// =====================================================
+// INSTAGRAM DINÂMICO - API VERCEL
+// =====================================================
+
+async function carregarInstagram() {
+
+    const instagramGrid =
+        document.getElementById("instagramGrid");
+
+    if (!instagramGrid) return;
+
+
+    try {
+
+        const resposta =
+            await fetch("/api/instagram");
+
+
+        if (!resposta.ok) {
+            throw new Error("Erro ao buscar publicações.");
+        }
+
+
+        const dados =
+            await resposta.json();
+
+
+        const posts =
+            dados.posts || [];
+
+
+        instagramGrid.innerHTML = "";
+
+
+        // Caso não existam publicações
+        if (!posts.length) {
+
+            instagramGrid.innerHTML = `
+                <div class="instagram-loading">
+                    <i class="fa-brands fa-instagram"></i>
+                    <p>Nenhuma publicação encontrada.</p>
+                </div>
+            `;
+
+            return;
+
+        }
+
+
+        // Exibir até 6 publicações
+        posts.slice(0, 6).forEach(post => {
+
+            // Criar link
+            const link =
+                document.createElement("a");
+
+            link.className = "instagram-post";
+
+            link.href =
+                post.permalink || "https://www.instagram.com/psinicoleforner/";
+
+            link.target = "_blank";
+
+            link.rel = "noopener noreferrer";
+
+
+            link.setAttribute(
+                "aria-label",
+                post.caption || "Ver publicação no Instagram"
+            );
+
+
+            // Criar imagem
+            const imagem =
+                document.createElement("img");
+
+
+            // Para vídeos, utilizar thumbnail
+            imagem.src =
+                post.media_type === "VIDEO"
+                    ? (post.thumbnail_url || post.media_url)
+                    : post.media_url;
+
+
+            imagem.alt =
+                post.caption
+                    ? post.caption.substring(0, 150)
+                    : "Publicação de Nicole Sant'Ana Forner";
+
+
+            imagem.loading = "lazy";
+
+
+            // Criar overlay
+            const overlay =
+                document.createElement("div");
+
+            overlay.className =
+                "instagram-overlay";
+
+
+            overlay.innerHTML = `
+                <i class="fa-brands fa-instagram"></i>
+            `;
+
+
+            // Montar card
+            link.appendChild(imagem);
+
+            link.appendChild(overlay);
+
+            instagramGrid.appendChild(link);
+
+        });
+
+
+    } catch (erro) {
+
+        console.error(
+            "Erro ao carregar Instagram:",
+            erro
+        );
+
+
+        instagramGrid.innerHTML = `
+            <div class="instagram-loading">
+                <i class="fa-brands fa-instagram"></i>
+                <p>
+                    Não foi possível carregar as publicações.
+                    Visite o Instagram para conferir os conteúdos.
+                </p>
+            </div>
+        `;
+
+    }
+
+}
+
+
+// Executar carregamento do Instagram
+carregarInstagram();
