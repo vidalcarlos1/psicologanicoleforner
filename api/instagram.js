@@ -26,13 +26,14 @@ export default async function handler(req, res) {
     const resposta = await fetch(url);
     const dados = await resposta.json();
 
-    if (!resposta.ok) {
-      console.error("Erro da API Meta:", dados);
+   if (!resposta.ok) {
+  console.error("Erro da API Meta:", dados);
 
-      return res.status(502).json({
-        error: "Erro ao buscar publicações do Instagram."
-      });
-    }
+  return res.status(502).json({
+    error: "Erro ao buscar publicações do Instagram.",
+    detalhes: dados.error
+  });
+}
 
     return res.status(200).json({
       posts: dados.data || []
